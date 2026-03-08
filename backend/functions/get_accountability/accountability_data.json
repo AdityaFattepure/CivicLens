@@ -1,0 +1,206 @@
+[
+  {
+    "id": "min-morth",
+    "name": "Ministry of Road Transport & Highways",
+    "type": "ministry",
+    "head": "Shri Nitin Gadkari",
+    "designation": "Union Minister",
+    "flagged_projects": 2,
+    "total_projects": 8,
+    "children": [
+      {
+        "id": "dept-nhai",
+        "name": "National Highways Authority of India",
+        "type": "department",
+        "head": "Shri Santosh Kumar Yadav",
+        "designation": "Chairman, NHAI",
+        "flagged_projects": 1,
+        "total_projects": 4,
+        "children": [
+          {
+            "id": "off-rajesh-kumar",
+            "name": "Rajesh Kumar, IAS",
+            "type": "officer",
+            "designation": "Chief Project Director, Delhi Region",
+            "flagged_projects": 1,
+            "total_projects": 3,
+            "children": [
+              { "id": "con-bharatmala-infra", "name": "BharatMala Infrastructure Pvt Ltd", "type": "contractor", "total_projects": 2, "flagged_projects": 1 },
+              { "id": "con-delhi-roadways", "name": "Delhi Roadways Construction Co.", "type": "contractor", "total_projects": 1, "flagged_projects": 0 }
+            ]
+          },
+          {
+            "id": "off-sunita-sharma",
+            "name": "Sunita Sharma, IAS",
+            "type": "officer",
+            "designation": "Project Director, South Region",
+            "flagged_projects": 0,
+            "total_projects": 1,
+            "children": [
+              { "id": "con-deccan-highways", "name": "Deccan Highways Builders", "type": "contractor", "total_projects": 1, "flagged_projects": 0 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dept-morth-state",
+        "name": "State PWD Coordination Wing",
+        "type": "department",
+        "head": "Shri Anurag Jain",
+        "designation": "Secretary (Roads)",
+        "flagged_projects": 1,
+        "total_projects": 4,
+        "children": [
+          {
+            "id": "off-vikram-patel",
+            "name": "Vikram Patel, IES",
+            "type": "officer",
+            "designation": "Superintending Engineer, Maharashtra",
+            "flagged_projects": 1,
+            "total_projects": 2,
+            "children": [
+              { "id": "con-highway-masters", "name": "Highway Masters India Ltd", "type": "contractor", "total_projects": 1, "flagged_projects": 1 },
+              { "id": "con-pune-builders", "name": "Pune Road Builders Pvt Ltd", "type": "contractor", "total_projects": 1, "flagged_projects": 0 }
+            ]
+          },
+          {
+            "id": "off-meera-nair",
+            "name": "Meera Nair, IAS",
+            "type": "officer",
+            "designation": "Executive Engineer, Karnataka",
+            "flagged_projects": 0,
+            "total_projects": 2,
+            "children": [
+              { "id": "con-bengaluru-roads", "name": "Bengaluru Roads Corporation", "type": "contractor", "total_projects": 2, "flagged_projects": 0 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "min-mohua",
+    "name": "Ministry of Housing & Urban Affairs",
+    "type": "ministry",
+    "head": "Shri Hardeep Singh Puri",
+    "designation": "Union Minister",
+    "flagged_projects": 1,
+    "total_projects": 6,
+    "children": [
+      {
+        "id": "dept-smart-city",
+        "name": "Smart Cities Mission Directorate",
+        "type": "department",
+        "head": "Shri Kunal Kumar",
+        "designation": "Joint Secretary & Mission Director",
+        "flagged_projects": 1,
+        "total_projects": 4,
+        "children": [
+          {
+            "id": "off-anil-gupta",
+            "name": "Anil Gupta, IAS",
+            "type": "officer",
+            "designation": "CEO, Pune Smart City",
+            "flagged_projects": 1,
+            "total_projects": 2,
+            "children": [
+              { "id": "con-smartcity-tech", "name": "SmartCity Technologies India", "type": "contractor", "total_projects": 1, "flagged_projects": 0 },
+              { "id": "con-urban-infra", "name": "Urban Infrastructure Solutions Pvt Ltd", "type": "contractor", "total_projects": 1, "flagged_projects": 1 }
+            ]
+          },
+          {
+            "id": "off-priya-deshmukh",
+            "name": "Priya Deshmukh, IAS",
+            "type": "officer",
+            "designation": "CEO, Hyderabad Smart City",
+            "flagged_projects": 0,
+            "total_projects": 2,
+            "children": [
+              { "id": "con-hyderabad-infra", "name": "Hyderabad Infrastructure Corp", "type": "contractor", "total_projects": 2, "flagged_projects": 0 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dept-amrut",
+        "name": "AMRUT Mission Directorate",
+        "type": "department",
+        "head": "Shri D. Thara",
+        "designation": "Additional Secretary",
+        "flagged_projects": 0,
+        "total_projects": 2,
+        "children": [
+          {
+            "id": "off-rajan-mehta",
+            "name": "Rajan Mehta, IES",
+            "type": "officer",
+            "designation": "State Mission Director, Tamil Nadu",
+            "flagged_projects": 0,
+            "total_projects": 2,
+            "children": [
+              { "id": "con-chennai-water", "name": "Chennai Water Works Ltd", "type": "contractor", "total_projects": 1, "flagged_projects": 0 },
+              { "id": "con-tn-infrastructure", "name": "TN Infrastructure Pvt Ltd", "type": "contractor", "total_projects": 1, "flagged_projects": 0 }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "min-jalshakti",
+    "name": "Ministry of Jal Shakti",
+    "type": "ministry",
+    "head": "Shri Gajendra Singh Shekhawat",
+    "designation": "Union Minister",
+    "flagged_projects": 1,
+    "total_projects": 4,
+    "children": [
+      {
+        "id": "dept-namami-gange",
+        "name": "National Mission for Clean Ganga",
+        "type": "department",
+        "head": "Shri G. Asok Kumar",
+        "designation": "Director General, NMCG",
+        "flagged_projects": 1,
+        "total_projects": 2,
+        "children": [
+          {
+            "id": "off-suresh-babu",
+            "name": "Suresh Babu, IAS",
+            "type": "officer",
+            "designation": "Executive Director, Delhi NCR Projects",
+            "flagged_projects": 1,
+            "total_projects": 2,
+            "children": [
+              { "id": "con-ganga-cleantech", "name": "Ganga CleanTech Solutions", "type": "contractor", "total_projects": 1, "flagged_projects": 1 },
+              { "id": "con-yamuna-works", "name": "Yamuna Works & Engineering", "type": "contractor", "total_projects": 1, "flagged_projects": 0 }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "dept-jal-jeevan",
+        "name": "Jal Jeevan Mission",
+        "type": "department",
+        "head": "Shri Vini Mahajan",
+        "designation": "Secretary, Jal Jeevan",
+        "flagged_projects": 0,
+        "total_projects": 2,
+        "children": [
+          {
+            "id": "off-kavitha-reddy",
+            "name": "Kavitha Reddy, IAS",
+            "type": "officer",
+            "designation": "State Coordinator, Telangana",
+            "flagged_projects": 0,
+            "total_projects": 2,
+            "children": [
+              { "id": "con-telangana-water", "name": "Telangana Water Solutions", "type": "contractor", "total_projects": 1, "flagged_projects": 0 },
+              { "id": "con-south-pipelines", "name": "South India Pipelines Corp", "type": "contractor", "total_projects": 1, "flagged_projects": 0 }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

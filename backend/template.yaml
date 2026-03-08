@@ -1,0 +1,307 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  CivicLens — The Truth Engine
+  Location-based civic transparency platform for Indian infrastructure projects.
+  AWS AI for Bharat Hackathon 2025
+
+Globals:
+  Function:
+    Runtime: python3.13
+    Timeout: 30
+    MemorySize: 256
+    Architectures:
+      - arm64
+    Environment:
+      Variables:
+        PROJECTS_TABLE: !Ref ProjectsTable
+        AUDITS_TABLE: !Ref AuditsTable
+        IMAGES_BUCKET: !Ref ImagesBucket
+        PLACE_INDEX: !Ref PlaceIndex
+    Layers:
+      - !Ref CommonLayer
+  Api:
+    Cors:
+      AllowMethods: "'GET,POST,OPTIONS'"
+      AllowHeaders: "'Content-Type,Authorization'"
+      AllowOrigin: "'*'"
+
+Parameters:
+  Stage:
+    Type: String
+    Default: dev
+    AllowedValues: [dev, prod]
+
+Resources:
+  # ─── API Gateway ───────────────────────────────────────────
+  CivicLensApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      Name: !Sub civiclens-api-${Stage}
+      StageName: !Ref Stage
+      TracingEnabled: true
+
+  # ─── Lambda Layer ──────────────────────────────────────────
+  CommonLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      LayerName: civiclens-common
+      Description: Shared utilities for CivicLens Lambda functions
+      ContentUri: layers/
+      CompatibleRuntimes:
+        - python3.13
+
+  # ─── Lambda Functions ──────────────────────────────────────
+  GetProjectsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub civiclens-get-projects-${Stage}
+      CodeUri: functions/get_projects/
+      Handler: handler.handler
+      Events:
+        GetAll:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CivicLensApi
+            Path: /projects
+            Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProjectsTable
+
+  GetAccountabilityFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub civiclens-get-accountability-${Stage}
+      CodeUri: functions/get_accountability/
+      Handler: handler.handler
+      Events:
+        GetTree:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CivicLensApi
+            Path: /accountability
+            Method: GET
+        GetEntity:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CivicLensApi
+            Path: /accountability/{entityId}
+            Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProjectsTable
+
+  SubmitAuditFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub civiclens-submit-audit-${Stage}
+      CodeUri: functions/submit_audit/
+      Handler: handler.handler
+      Timeout: 60
+      MemorySize: 512
+      Events:
+        Submit:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CivicLensApi
+            Path: /projects/{projectId}/audit
+            Method: POST
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProjectsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AuditsTable
+        - S3CrudPolicy:
+            BucketName: !Ref ImagesBucket
+        - RekognitionDetectOnlyPolicy: {}
+
+  IngestTenderFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub civiclens-ingest-tender-${Stage}
+      CodeUri: functions/ingest_tender/
+      Handler: handler.handler
+      Timeout: 120
+      MemorySize: 1024
+      Events:
+        S3Upload:
+          Type: S3
+          Properties:
+            Bucket: !Ref TendersBucket
+            Events: s3:ObjectCreated:*
+            Filter:
+              S3Key:
+                Rules:
+                  - Name: suffix
+                    Value: .pdf
+      Environment:
+        Variables:
+          BEDROCK_MODEL_ID: anthropic.claude-3-haiku-20240307-v1:0
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProjectsTable
+        - S3ReadPolicy:
+            BucketName: !Sub civiclens-tenders-${AWS::AccountId}-${Stage}
+        - Statement:
+            Effect: Allow
+            Action:
+              - textract:DetectDocumentText
+              - textract:AnalyzeDocument
+            Resource: '*'
+        - Statement:
+            Effect: Allow
+            Action:
+              - bedrock:InvokeModel
+            Resource: !Sub arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-3-haiku-20240307-v1:0
+        - Statement:
+            Effect: Allow
+            Action:
+              - geo:SearchPlaceIndexForText
+            Resource: !GetAtt PlaceIndex.Arn
+
+  UpvoteFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub civiclens-upvote-${Stage}
+      CodeUri: functions/upvote/
+      Handler: handler.handler
+      Events:
+        Upvote:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CivicLensApi
+            Path: /projects/{projectId}/audits/{auditId}/upvote
+            Method: POST
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref AuditsTable
+        - DynamoDBCrudPolicy:
+            TableName: !Ref ProjectsTable
+
+  GetStatsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub civiclens-get-stats-${Stage}
+      CodeUri: functions/get_stats/
+      Handler: handler.handler
+      Events:
+        Stats:
+          Type: Api
+          Properties:
+            RestApiId: !Ref CivicLensApi
+            Path: /stats
+            Method: GET
+      Policies:
+        - DynamoDBReadPolicy:
+            TableName: !Ref ProjectsTable
+        - DynamoDBReadPolicy:
+            TableName: !Ref AuditsTable
+
+  # ─── DynamoDB Tables ───────────────────────────────────────
+  ProjectsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub civiclens-projects-${Stage}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: geohash
+          AttributeType: S
+        - AttributeName: city
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: by-geohash
+          KeySchema:
+            - AttributeName: geohash
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: by-city
+          KeySchema:
+            - AttributeName: city
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Project
+          Value: CivicLens
+
+  AuditsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: !Sub civiclens-audits-${Stage}
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: project_id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+        - AttributeName: project_id
+          KeyType: RANGE
+      GlobalSecondaryIndexes:
+        - IndexName: by-project
+          KeySchema:
+            - AttributeName: project_id
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+      Tags:
+        - Key: Project
+          Value: CivicLens
+
+  # ─── S3 Buckets ────────────────────────────────────────────
+  ImagesBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub civiclens-images-${AWS::AccountId}-${Stage}
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, PUT, POST]
+            AllowedOrigins: ['*']
+            MaxAge: 3600
+
+  TendersBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub civiclens-tenders-${AWS::AccountId}-${Stage}
+
+  # ─── Amazon Location Service ───────────────────────────────
+  PlaceIndex:
+    Type: AWS::Location::PlaceIndex
+    Properties:
+      IndexName: civiclens-places
+      DataSource: Esri
+      PricingPlan: RequestBasedUsage
+
+  # ─── Amplify Hosting ──────────────────────────────────────
+  # (Configured via Amplify CLI / Console — not in SAM template)
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub https://${CivicLensApi}.execute-api.${AWS::Region}.amazonaws.com/${Stage}
+
+  ProjectsTableName:
+    Description: DynamoDB table for projects
+    Value: !Ref ProjectsTable
+
+  AuditsTableName:
+    Description: DynamoDB table for audits
+    Value: !Ref AuditsTable
+
+  ImagesBucketName:
+    Description: S3 bucket for citizen-uploaded images
+    Value: !Ref ImagesBucket
+
+  TendersBucketName:
+    Description: S3 bucket for tender PDFs
+    Value: !Ref TendersBucket

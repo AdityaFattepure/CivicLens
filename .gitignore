@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+frontend/node_modules/
+backend/mock-api/node_modules/
+
+# Build output
+frontend/dist/
+frontend/dist.zip
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+
+# AWS SAM
+.aws-sam/
+samconfig.toml
+
+# Environment
+.env
+.env.local
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# PPT output
+*.pptx
+
+# Temp files
+rules.json

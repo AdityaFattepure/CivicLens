@@ -1,0 +1,231 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-gray-50 text-gray-800 font-sans;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  ::selection {
+    @apply bg-blue-600/20 text-blue-900;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-300 rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-400;
+  }
+}
+
+@layer components {
+  /* ─── Cards ────────────────────────────────────────────── */
+  .card {
+    @apply bg-white border border-gray-200 rounded-xl shadow-sm;
+  }
+  .card-hover {
+    @apply card hover:border-gray-300 hover:shadow-md transition-all duration-150 cursor-pointer;
+  }
+
+  /* ─── Buttons ──────────────────────────────────────────── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm px-4 py-2 transition-colors duration-150 active:scale-[0.98] shadow-sm;
+  }
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg bg-white hover:bg-gray-50 text-gray-700 text-sm px-4 py-2 border border-gray-300 transition-colors duration-150 shadow-sm;
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 font-medium rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 text-sm px-3 py-1.5 transition-colors duration-150;
+  }
+
+  /* ─── Badges ───────────────────────────────────────────── */
+  .badge {
+    @apply inline-flex items-center gap-1 font-medium rounded-md text-[11px] leading-none px-2 py-1 tracking-wide;
+  }
+
+  /* ─── Inputs ───────────────────────────────────────────── */
+  .input {
+    @apply w-full bg-white border border-gray-300 rounded-lg text-sm text-gray-900 placeholder-gray-400 px-3.5 py-2 transition-colors duration-150 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20;
+  }
+}
+
+/* ─── Leaflet light overrides ─────────────────────────────── */
+.leaflet-container {
+  background: #f9fafb !important;
+  font-family: 'Inter', system-ui, sans-serif !important;
+}
+.leaflet-popup-content-wrapper {
+  background: #ffffff !important;
+  color: #1f2937 !important;
+  border-radius: 12px !important;
+  border: 1px solid #e5e7eb !important;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1) !important;
+  padding: 0 !important;
+}
+.leaflet-popup-content {
+  margin: 0 !important;
+}
+.leaflet-popup-tip {
+  background: #ffffff !important;
+  border: 1px solid #e5e7eb !important;
+}
+.leaflet-popup-close-button {
+  color: #9ca3af !important;
+  font-size: 18px !important;
+  padding: 6px 8px !important;
+}
+.leaflet-popup-close-button:hover {
+  color: #374151 !important;
+}
+.leaflet-control-zoom a {
+  background: #ffffff !important;
+  color: #6b7280 !important;
+  border-color: #e5e7eb !important;
+  width: 30px !important;
+  height: 30px !important;
+  line-height: 30px !important;
+  font-size: 14px !important;
+}
+.leaflet-control-zoom a:hover {
+  background: #f3f4f6 !important;
+  color: #374151 !important;
+}
+.leaflet-control-zoom {
+  border: 1px solid #e5e7eb !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: #9ca3af !important;
+  font-size: 10px !important;
+}
+.leaflet-control-attribution a {
+  color: #6b7280 !important;
+}
+
+/* ─── Gradient utilities ─────────────────────────────────── */
+.text-gradient {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600;
+}
+.text-gradient-warm {
+  @apply bg-clip-text text-transparent bg-gradient-to-r from-amber-500 to-orange-500;
+}
+
+.glass {
+  @apply bg-white/80 backdrop-blur-sm border border-gray-200 rounded-xl shadow-sm;
+}
+
+.glow-emerald {
+  box-shadow: 0 0 20px rgba(16, 185, 129, 0.08), 0 0 60px rgba(16, 185, 129, 0.03);
+}
+.glow-red {
+  box-shadow: 0 0 20px rgba(239, 68, 68, 0.08), 0 0 60px rgba(239, 68, 68, 0.03);
+}
+.glow-blue {
+  box-shadow: 0 0 20px rgba(59, 130, 246, 0.1), 0 0 60px rgba(59, 130, 246, 0.04);
+}
+
+/* ─── Shimmer / skeleton loading ─────────────────────────── */
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+.skeleton {
+  @apply rounded-lg;
+  background: linear-gradient(90deg, #f3f4f6 0%, #e5e7eb 50%, #f3f4f6 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+}
+
+/* ─── Step connector line ────────────────────────────────── */
+.step-line {
+  @apply relative;
+}
+.step-line::after {
+  content: '';
+  @apply absolute top-full left-1/2 -translate-x-1/2 w-px h-8 bg-gray-200;
+}
+
+/* ─── AWS badge ──────────────────────────────────────────── */
+.aws-badge {
+  @apply inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-[#FF9900]/10 border border-[#FF9900]/25 text-[#d97706] text-[10px] font-semibold tracking-wide;
+}
+
+/* ─── Pipeline step ──────────────────────────────────────── */
+@keyframes pulse-ring {
+  0% { transform: scale(0.8); opacity: 0.5; }
+  80%, 100% { transform: scale(2); opacity: 0; }
+}
+.pulse-ring::before {
+  content: '';
+  @apply absolute inset-0 rounded-full;
+  background: currentColor;
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  opacity: 0.1;
+}
+
+/* ─── Gradient mesh background ───────────────────────────── */
+.mesh-gradient {
+  background:
+    radial-gradient(ellipse 50% 50% at 20% 50%, rgba(59, 130, 246, 0.06), transparent),
+    radial-gradient(ellipse 50% 50% at 80% 20%, rgba(99, 102, 241, 0.05), transparent),
+    radial-gradient(ellipse 50% 50% at 50% 80%, rgba(16, 185, 129, 0.04), transparent);
+}
+
+/* Fade-in */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+/* Staggered fade-in for children */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-stagger > * {
+  opacity: 0;
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+.animate-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* ─── Typing cursor ──────────────────────────────────────── */
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+.cursor-blink::after {
+  content: '▊';
+  @apply text-blue-500 ml-0.5;
+  animation: blink 0.8s step-end infinite;
+}
